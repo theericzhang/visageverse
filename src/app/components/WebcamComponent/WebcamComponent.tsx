@@ -1,7 +1,25 @@
 "use client";
 import React, { useEffect, useRef } from "react";
 import * as faceapi from "face-api.js";
-import { drawDetections } from "face-api.js/build/commonjs/draw";
+import styled from "styled-components";
+
+const WebcamComponentWrapper = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+`;
+
+const WebcamVideoComponent = styled.video`
+    position: absolute;
+    top: 0;
+`;
+
+const CanvasComponent = styled.canvas`
+    position: absolute;
+    top: 0;
+    z-index: 2;
+`;
 
 const WebcamComponent = () => {
     const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -45,6 +63,14 @@ const WebcamComponent = () => {
                         canvasRef.current.height
                     );
                     faceapi.draw.drawDetections(
+                        canvasRef.current,
+                        resizedDetections
+                    );
+                    faceapi.draw.drawFaceLandmarks(
+                        canvasRef.current,
+                        resizedDetections
+                    );
+                    faceapi.draw.drawFaceExpressions(
                         canvasRef.current,
                         resizedDetections
                     );
@@ -121,10 +147,10 @@ const WebcamComponent = () => {
     }, []);
 
     return (
-        <>
-            <video ref={videoRef} autoPlay playsInline />
-            <canvas ref={canvasRef} />
-        </>
+        <WebcamComponentWrapper>
+            <WebcamVideoComponent ref={videoRef} autoPlay playsInline />
+            <CanvasComponent ref={canvasRef} />
+        </WebcamComponentWrapper>
     );
 };
 

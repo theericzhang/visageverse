@@ -5,6 +5,7 @@ import { drawDetections } from "face-api.js/build/commonjs/draw";
 
 const WebcamComponent = () => {
     const videoRef = useRef<HTMLVideoElement | null>(null);
+    const canvasRef = useRef<HTMLCanvasElement | null>(null);
     // Function to start the webcam and perform face recognition
     const loadAllModels = async () => {
         await faceapi.nets.tinyFaceDetector.loadFromUri("/models");
@@ -14,15 +15,17 @@ const WebcamComponent = () => {
     };
 
     const handleSuccess = (stream) => {
-        if (videoRef.current) {
+        if (videoRef.current && canvasRef.current) {
             videoRef.current.srcObject = stream;
             videoRef.current.addEventListener("play", () => {
-                const canvas = faceapi.createCanvasFromMedia(videoRef.current);
-                document.body.append(canvas);
                 const displaySize = {
                     width: videoRef.current.videoWidth,
                     height: videoRef.current.videoHeight,
                 };
+                canvasRef.current.width = displaySize.width;
+                canvasRef.current.height = displaySize.height;
+
+                const context = canvasRef.current?.getContext("2d");
                 setInterval(async () => {
                     const detections = await faceapi
                         .detectAllFaces(
@@ -31,12 +34,20 @@ const WebcamComponent = () => {
                         )
                         .withFaceLandmarks()
                         .withFaceExpressions();
-                    console.log(detections);
                     const resizedDetections = faceapi.resizeResults(
                         detections,
                         displaySize
                     );
-                    faceapi.draw.drawDetections(canvas, resizedDetections);
+                    context.clearRect(
+                        0,
+                        0,
+                        canvasRef.current.width,
+                        canvasRef.current.height
+                    );
+                    faceapi.draw.drawDetections(
+                        canvasRef.current,
+                        resizedDetections
+                    );
                 }, 100);
             });
         }
@@ -109,7 +120,12 @@ const WebcamComponent = () => {
         getUserMedia();
     }, []);
 
-    return <video ref={videoRef} autoPlay playsInline />;
+    return (
+        <>
+            <video ref={videoRef} autoPlay playsInline />
+            <canvas ref={canvasRef} />
+        </>
+    );
 };
 
 export default WebcamComponent;

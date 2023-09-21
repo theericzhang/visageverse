@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useRef } from "react";
 import * as faceapi from "face-api.js";
+import { drawDetections } from "face-api.js/build/commonjs/draw";
 
 const WebcamComponent = () => {
     const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -16,6 +17,12 @@ const WebcamComponent = () => {
         if (videoRef.current) {
             videoRef.current.srcObject = stream;
             videoRef.current.addEventListener("play", () => {
+                const canvas = faceapi.createCanvasFromMedia(videoRef.current);
+                document.body.append(canvas);
+                const displaySize = {
+                    width: videoRef.current.videoWidth,
+                    height: videoRef.current.videoHeight,
+                };
                 setInterval(async () => {
                     const detections = await faceapi
                         .detectAllFaces(
@@ -25,7 +32,12 @@ const WebcamComponent = () => {
                         .withFaceLandmarks()
                         .withFaceExpressions();
                     console.log(detections);
-                }, 1000);
+                    const resizedDetections = faceapi.resizeResults(
+                        detections,
+                        displaySize
+                    );
+                    faceapi.draw.drawDetections(canvas, resizedDetections);
+                }, 100);
             });
         }
     };

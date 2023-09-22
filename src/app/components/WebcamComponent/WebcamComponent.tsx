@@ -10,10 +10,7 @@ const WebcamComponentWrapper = styled.div`
     position: relative;
 `;
 
-const WebcamVideoComponent = styled.video`
-    position: absolute;
-    top: 0;
-`;
+const WebcamVideoComponent = styled.video``;
 
 const CanvasComponent = styled.canvas`
     position: absolute;

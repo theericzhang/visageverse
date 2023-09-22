@@ -10,6 +10,8 @@ export default function useFetch() {
     const [error, setError] = useState<Error | null>();
     const [isLoading, setIsLoading] = useState<Boolean>(false);
 
+    getData();
+
     async function getData() {
         try {
             setIsLoading(true);

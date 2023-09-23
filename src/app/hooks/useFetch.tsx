@@ -5,7 +5,7 @@ interface Error {
     message: string;
 }
 
-export default function useFetch() {
+export default function useFetch(userInput: string) {
     const [data, setData] = useState<String>("");
     const [error, setError] = useState<Error | null>();
     const [isLoading, setIsLoading] = useState<Boolean>(false);
@@ -15,7 +15,13 @@ export default function useFetch() {
     async function getData() {
         try {
             setIsLoading(true);
-            const response = await fetch("");
+            const response = await fetch("api/openai/server", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ prompt: userInput }),
+            });
             if (!response.ok) {
                 throw {
                     status: response.status,

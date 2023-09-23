@@ -32,15 +32,18 @@ const httpMessages = {
 
 export async function POST(req) {
     if (isCurrentEnvironmentAzure) {
+        console.log(req);
         try {
-            console.log("req.body.prompt", req.body.prompt);
+            const res = await req.json();
+            console.log("res here", res);
+            console.log("req.prompt", res.prompt);
             const response = await fetch(url, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     "api-key": apiKey,
                 },
-                body: JSON.stringify(generatePrompt(req.body.prompt)),
+                body: JSON.stringify(generatePrompt(res.prompt)),
             });
             console.log("attempted fetch");
 

@@ -10,6 +10,8 @@ export default function useFetch(userInput: string) {
     const [error, setError] = useState<Error | null>();
     const [isLoading, setIsLoading] = useState<Boolean>(false);
 
+    let corePrompt = `Write a few poetic lines on someone who is: ${userInput}.`;
+
     getData();
 
     async function getData() {
@@ -20,17 +22,18 @@ export default function useFetch(userInput: string) {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ prompt: userInput }),
+                body: JSON.stringify({ prompt: corePrompt }),
             });
             if (!response.ok) {
                 throw {
                     status: response.status,
                     message: "Request Failed",
                 } as Error;
+            } else {
+                const data = await response.json();
+                setData(data);
+                setIsLoading(false);
             }
-            const data = await response.json();
-            setData(data);
-            setIsLoading(false);
         } catch (e) {
             console.log(e);
             setError(e as Error);

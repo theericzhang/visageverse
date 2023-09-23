@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface Error {
     status: number;
@@ -12,12 +12,14 @@ export default function useFetch(userInput: string) {
 
     let corePrompt = `Write a few poetic lines on someone who is: ${userInput}.`;
 
-    getData();
+    useEffect(() => {
+        getData();
+    }, [userInput]);
 
     async function getData() {
         try {
             setIsLoading(true);
-            const response = await fetch("api/openai/server", {
+            const response = await fetch("/src/app/api/openai/server", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -32,11 +34,11 @@ export default function useFetch(userInput: string) {
             } else {
                 const data = await response.json();
                 setData(data);
-                setIsLoading(false);
             }
         } catch (e) {
             console.log(e);
             setError(e as Error);
+        } finally {
             setIsLoading(false);
         }
     }

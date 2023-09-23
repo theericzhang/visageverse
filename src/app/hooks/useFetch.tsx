@@ -19,7 +19,7 @@ export default function useFetch(userInput: string) {
     async function getData() {
         try {
             setIsLoading(true);
-            const response = await fetch("/src/app/api/openai/server", {
+            const response = await fetch("/api/", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

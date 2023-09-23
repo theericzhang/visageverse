@@ -9,7 +9,7 @@ const HomeWrapper = styled.section``;
 
 export default function Home() {
     const { data, error, isLoading } = useFetch("Sad");
-    console.log(data);
+    console.log(data, error, isLoading);
     return (
         <HomeWrapper>
             <QuoteLabel />

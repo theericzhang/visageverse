@@ -1,5 +1,5 @@
 /* eslint-disable import/no-anonymous-default-export */
-import { Configuration, OpenAIApi } from "openai";
+import OpenAI from "openai";
 
 const apiKey = process.env.AZURE_OPENAI_KEY;
 const base_url = process.env.BASE_URL;
@@ -9,7 +9,6 @@ const deploymentName = process.env.DEPLOYMENT_NAME;
 const isCurrentEnvironmentAzure = process.env.CURRENT_ENVIRONMENT === "azure";
 console.log(isCurrentEnvironmentAzure);
 let url;
-let configuration;
 let openai;
 console.log(isCurrentEnvironmentAzure);
 
@@ -17,10 +16,9 @@ if (isCurrentEnvironmentAzure) {
     url = `${base_url}/openai/deployments/${deploymentName}/completions?api-version=2022-12-01`;
     console.log("set url");
 } else {
-    configuration = new Configuration({
+    openai = new OpenAI({
         apiKey: process.env.OPENAI_API_KEY,
     });
-    openai = new OpenAIApi(configuration);
 }
 
 const httpMessages = {
@@ -31,7 +29,8 @@ const httpMessages = {
     500: "Internal Server Error - An unexpected error occurred on the server.",
 };
 
-export default async function (req, res) {
+export async function POST(req, res) {
+    console.log("launch server");
     if (isCurrentEnvironmentAzure) {
         try {
             // console.log(req.body.prompt);

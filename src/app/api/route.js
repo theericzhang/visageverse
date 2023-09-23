@@ -1,5 +1,6 @@
 /* eslint-disable import/no-anonymous-default-export */
 import OpenAI from "openai";
+import { NextResponse } from "next/server";
 
 const apiKey = process.env.AZURE_OPENAI_KEY;
 const base_url = process.env.BASE_URL;
@@ -13,7 +14,7 @@ let openai;
 console.log(isCurrentEnvironmentAzure);
 
 if (isCurrentEnvironmentAzure) {
-    url = `${base_url}/openai/deployments/${deploymentName}/completions?api-version=2022-12-01`;
+    url = `${base_url}/openai/deployments/${deploymentName}/completions?api-version=2023-05-15`;
     console.log("set url");
 } else {
     openai = new OpenAI({
@@ -29,11 +30,10 @@ const httpMessages = {
     500: "Internal Server Error - An unexpected error occurred on the server.",
 };
 
-export async function POST(req, res) {
-    console.log("launch server");
+export async function POST(req) {
     if (isCurrentEnvironmentAzure) {
         try {
-            // console.log(req.body.prompt);
+            console.log("req.body.prompt", req.body.prompt);
             const response = await fetch(url, {
                 method: "POST",
                 headers: {
@@ -49,24 +49,33 @@ export async function POST(req, res) {
                     `HTTP Code: ${response.status} - ${response.statusText}`
                 );
                 console.log("fetch failed");
-                res.status(500).json({
+                return NextResponse.json({
                     error: `Oops! Something went wrong. ${
                         httpMessages[response.status]
                     }`,
                 });
+                // res.status(500).json({
+                //     error: `Oops! Something went wrong. ${
+                //         httpMessages[response.status]
+                //     }`,
+                // });
 
                 // If something went wrong, like an api call did not go through because of bad permissions, you will be redirected here
             } else {
                 const completion = await response.json();
-                res.status(200).json({ result: completion.choices[0].text });
-                console.log("fetch succeeded");
+                return NextResponse.json({
+                    result: completion.choices[0].text,
+                });
             }
         } catch (e) {
             console.error(e);
             console.log("fetch failed 2");
-            res.status(500).json({
+            return NextResponse.json({
                 error: "Could not contact GPT 3.5. Check to see if your internet connection is stable",
             });
+            // res.status(500).json({
+            //     error: "Could not contact GPT 3.5. Check to see if your internet connection is stable",
+            // });
             // If there was an issue where the outbound connection could not reach the server, then you will be redirected here.
         }
     } else {
@@ -76,7 +85,9 @@ export async function POST(req, res) {
             temperature: 0.6,
             max_tokens: 1000,
         });
-        res.status(200).json({ result: completion.data.choices[0].text });
+        return NextResponse.json({
+            result: completion.data.choices[0].text,
+        });
     }
 }
 

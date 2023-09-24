@@ -55,7 +55,23 @@ const WebcamComponent = ({ setExpression }: IWebcamComponent) => {
                         )
                         .withFaceLandmarks()
                         .withFaceExpressions();
+
                     // figure out how to grab highest value expression and debounce the value from updating.
+                    let maxValue = 0;
+                    let tempKeyMax = "";
+                    for (let key in detections[0].expressions) {
+                        if (detections[0].expressions[key] > maxValue) {
+                            maxValue = detections[0].expressions[key];
+                            tempKeyMax = key;
+                        }
+                    }
+                    console.log(tempKeyMax);
+
+                    let arrayOfExpressions = Object.values(
+                        detections[0].expressions
+                    );
+                    console.log("arrayOfExpressions", arrayOfExpressions);
+
                     const resizedDetections = faceapi.resizeResults(
                         detections,
                         displaySize
@@ -75,7 +91,7 @@ const WebcamComponent = ({ setExpression }: IWebcamComponent) => {
                         resizedDetections
                     );
                     console.log(detections);
-                }, 100);
+                }, 200);
             });
         }
     };

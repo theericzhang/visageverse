@@ -40,10 +40,8 @@ let messages = [
 
 export async function POST(req) {
     if (isCurrentEnvironmentAzure) {
-        console.log(req);
         try {
             const res = await req.json();
-            console.log(res);
             const response = await fetch(url, {
                 method: "POST",
                 headers: {
@@ -52,7 +50,6 @@ export async function POST(req) {
                 },
                 body: JSON.stringify(generatePrompt(res.userInput)),
             });
-            console.log("attempted fetch");
 
             if (!response.ok) {
                 console.log(
@@ -68,19 +65,16 @@ export async function POST(req) {
                 // If something went wrong, like an api call did not go through because of bad permissions, you will be redirected here
             } else {
                 const completion = await response.json();
+                console.log(completion);
                 return NextResponse.json({
-                    result: completion.choices[0].text,
+                    result: completion.choices[0].message,
                 });
             }
         } catch (e) {
             console.error(e);
-            console.log("fetch failed 2");
             return NextResponse.json({
                 error: "Could not contact GPT 3.5. Check to see if your internet connection is stable",
             });
-            // res.status(500).json({
-            //     error: "Could not contact GPT 3.5. Check to see if your internet connection is stable",
-            // });
             // If there was an issue where the outbound connection could not reach the server, then you will be redirected here.
         }
     } else {

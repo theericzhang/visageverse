@@ -10,8 +10,6 @@ export default function useFetch(userInput: string) {
     const [error, setError] = useState<Error | null>();
     const [isLoading, setIsLoading] = useState<Boolean>(false);
 
-    let corePrompt = `Write a poetic sentence or two on someone who is: ${userInput}.`;
-
     useEffect(() => {
         getData();
     }, [userInput]);

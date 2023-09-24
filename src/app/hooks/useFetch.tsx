@@ -1,13 +1,20 @@
 import { useState, useEffect } from "react";
 
-interface Error {
+interface IError {
     status: number;
     message: string;
 }
 
+interface IData {
+    result: {
+        role: string;
+        content: string;
+    };
+}
+
 export default function useFetch(userInput: string) {
-    const [data, setData] = useState<String>("");
-    const [error, setError] = useState<Error | null>();
+    const [data, setData] = useState<IData | null>();
+    const [error, setError] = useState<IError | null>();
     const [isLoading, setIsLoading] = useState<Boolean>(false);
 
     useEffect(() => {
@@ -29,14 +36,14 @@ export default function useFetch(userInput: string) {
                 throw {
                     status: response.status,
                     message: "Request Failed",
-                } as Error;
+                } as IError;
             } else {
                 const data = await response.json();
                 setData(data);
             }
         } catch (e) {
             console.log(e);
-            setError(e as Error);
+            setError(e as IError);
         } finally {
             setIsLoading(false);
         }

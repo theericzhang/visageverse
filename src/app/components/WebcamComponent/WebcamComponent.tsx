@@ -22,6 +22,8 @@ interface IWebcamComponent {
     setExpression: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
+let highPollRateEmotion = "";
+
 const WebcamComponent = ({ setExpression }: IWebcamComponent) => {
     const videoRef = useRef<HTMLVideoElement | null>(null);
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -53,6 +55,7 @@ const WebcamComponent = ({ setExpression }: IWebcamComponent) => {
                         )
                         .withFaceLandmarks()
                         .withFaceExpressions();
+                    // figure out how to grab highest value expression and debounce the value from updating.
                     const resizedDetections = faceapi.resizeResults(
                         detections,
                         displaySize

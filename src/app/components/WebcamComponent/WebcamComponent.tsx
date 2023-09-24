@@ -18,7 +18,11 @@ const CanvasComponent = styled.canvas`
     z-index: 2;
 `;
 
-const WebcamComponent = () => {
+interface IWebcamComponent {
+    setExpression: React.Dispatch<React.SetStateAction<string | null>>;
+}
+
+const WebcamComponent = ({ setExpression }: IWebcamComponent) => {
     const videoRef = useRef<HTMLVideoElement | null>(null);
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
     // Function to start the webcam and perform face recognition
@@ -63,14 +67,11 @@ const WebcamComponent = () => {
                         canvasRef.current,
                         resizedDetections
                     );
-                    faceapi.draw.drawFaceLandmarks(
-                        canvasRef.current,
-                        resizedDetections
-                    );
                     faceapi.draw.drawFaceExpressions(
                         canvasRef.current,
                         resizedDetections
                     );
+                    console.log(detections);
                 }, 100);
             });
         }

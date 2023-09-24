@@ -3,6 +3,11 @@ import styled from "styled-components";
 interface IQuoteLabel {
     quote?: string;
 }
+
+const QuoteWrapper = styled.span`
+    white-space: pre-wrap;
+`;
+
 export default function QuoteLabel({ quote }: IQuoteLabel) {
-    return <div>{quote}</div>;
+    return <QuoteWrapper>{`${quote}`}</QuoteWrapper>;
 }

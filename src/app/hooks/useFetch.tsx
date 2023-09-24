@@ -10,7 +10,7 @@ export default function useFetch(userInput: string) {
     const [error, setError] = useState<Error | null>();
     const [isLoading, setIsLoading] = useState<Boolean>(false);
 
-    let corePrompt = `Write a few poetic lines on someone who is: ${userInput}.`;
+    let corePrompt = `Write a poetic sentence or two on someone who is: ${userInput}.`;
 
     useEffect(() => {
         getData();
@@ -24,7 +24,8 @@ export default function useFetch(userInput: string) {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ prompt: corePrompt }),
+                body: JSON.stringify({ userInput }),
+                // body: JSON.stringify({ prompt: corePrompt }),
             });
             if (!response.ok) {
                 throw {

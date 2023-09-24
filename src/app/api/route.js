@@ -14,7 +14,7 @@ let openai;
 console.log(isCurrentEnvironmentAzure);
 
 if (isCurrentEnvironmentAzure) {
-    url = `${base_url}/openai/deployments/${deploymentName}/completions?api-version=2023-05-15`;
+    url = `${base_url}/openai/deployments/${deploymentName}/chat/completions?api-version=2023-05-15`;
     console.log("set url");
 } else {
     openai = new OpenAI({
@@ -30,20 +30,27 @@ const httpMessages = {
     500: "Internal Server Error - An unexpected error occurred on the server.",
 };
 
+let messages = [
+    {
+        role: "system",
+        content:
+            "You're writing a short poetic line or two based on someone's emotion. Be as sassy as possible",
+    },
+];
+
 export async function POST(req) {
     if (isCurrentEnvironmentAzure) {
         console.log(req);
         try {
             const res = await req.json();
-            console.log("res here", res);
-            console.log("req.prompt", res.prompt);
+            console.log(res);
             const response = await fetch(url, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     "api-key": apiKey,
                 },
-                body: JSON.stringify(generatePrompt(res.prompt)),
+                body: JSON.stringify(generatePrompt(res.userInput)),
             });
             console.log("attempted fetch");
 
@@ -57,11 +64,6 @@ export async function POST(req) {
                         httpMessages[response.status]
                     }`,
                 });
-                // res.status(500).json({
-                //     error: `Oops! Something went wrong. ${
-                //         httpMessages[response.status]
-                //     }`,
-                // });
 
                 // If something went wrong, like an api call did not go through because of bad permissions, you will be redirected here
             } else {
@@ -98,9 +100,14 @@ function generatePrompt(prompt) {
     if (isCurrentEnvironmentAzure) {
         // console.log('attempting to set model?');
         return {
-            model: "text-davinci-003",
-            prompt: prompt,
-            max_tokens: 1000,
+            model: "gpt-35-turbo",
+            messages: [
+                ...messages,
+                {
+                    role: "user",
+                    content: `I am ${prompt}`,
+                },
+            ],
             // other options here
         };
     } else {

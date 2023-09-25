@@ -75,24 +75,24 @@ const WebcamComponent = ({ setExpression }: IWebcamComponent) => {
                         }
                     }
                     // grab top expression (tempKeyMax);
-                    debounceExpressionUpdate(tempKeyMax);
+                    // debounceExpressionUpdate(tempKeyMax);
 
                     const resizedDetections = faceapi.resizeResults(
                         detections,
                         displaySize
                     );
-                    context.clearRect(
+                    context?.clearRect(
                         0,
                         0,
-                        canvasRef.current.width,
-                        canvasRef.current.height
+                        canvasRef.current!.width,
+                        canvasRef.current!.height
                     );
                     faceapi.draw.drawDetections(
-                        canvasRef.current,
+                        canvasRef.current!,
                         resizedDetections
                     );
                     faceapi.draw.drawFaceExpressions(
-                        canvasRef.current,
+                        canvasRef.current!,
                         resizedDetections
                     );
                 }, 200);

@@ -22,6 +22,10 @@ interface IWebcamComponent {
     setExpression: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
+interface FaceExpressions {
+    [key: string]: number;
+}
+
 let highPollRateEmotion = "";
 
 const WebcamComponent = ({ setExpression }: IWebcamComponent) => {
@@ -69,7 +73,9 @@ const WebcamComponent = ({ setExpression }: IWebcamComponent) => {
                     let maxValue = 0;
                     let tempKeyMax = "";
                     for (let key in detections[0].expressions) {
+                        // @ts-ignore: Unreachable code error
                         if (detections[0].expressions[key] > maxValue) {
+                            // @ts-ignore: Unreachable code error
                             maxValue = detections[0].expressions[key];
                             tempKeyMax = key;
                         }

@@ -19,7 +19,7 @@ const CanvasComponent = styled.canvas`
 `;
 
 interface IWebcamComponent {
-    expressionRef: React.MutableRefObject<string | null>;
+    setExpression: React.Dispatch<React.SetStateAction<string>>;
 }
 
 interface FaceExpressions {
@@ -28,7 +28,7 @@ interface FaceExpressions {
 
 let highPollRateEmotion = "";
 
-const WebcamComponent = ({ expressionRef }: IWebcamComponent) => {
+const WebcamComponent = ({ setExpression }: IWebcamComponent) => {
     const videoRef = useRef<HTMLVideoElement | null>(null);
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
     // Function to start the webcam and perform face recognition
@@ -91,7 +91,7 @@ const WebcamComponent = ({ expressionRef }: IWebcamComponent) => {
                                 clearTimeout(debounceTimeout);
                             }
                             debounceTimeout = setTimeout(() => {
-                                expressionRef.current = highPollRateEmotion;
+                                setExpression(highPollRateEmotion);
                                 debounceTimeout = null;
                             }, 1000);
                         }

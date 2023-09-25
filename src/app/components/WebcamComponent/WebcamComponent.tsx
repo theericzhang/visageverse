@@ -75,44 +75,46 @@ const WebcamComponent = ({ expressionRef }: IWebcamComponent) => {
 
                     // figure out how to grab highest value expression and debounce the value from updating.
                     let maxValue = 0;
-                    for (let key in detections[0].expressions) {
-                        // @ts-ignore: Unreachable code error
-                        if (detections[0].expressions[key] > maxValue) {
+                    if (detections[0]) {
+                        for (let key in detections[0].expressions) {
                             // @ts-ignore: Unreachable code error
-                            maxValue = detections[0].expressions[key];
-                            tempKeyMax = key;
+                            if (detections[0].expressions[key] > maxValue) {
+                                // @ts-ignore: Unreachable code error
+                                maxValue = detections[0].expressions[key];
+                                tempKeyMax = key;
+                            }
                         }
-                    }
 
-                    if (tempKeyMax !== highPollRateEmotion) {
-                        highPollRateEmotion = tempKeyMax;
-                        if (debounceTimeout !== null) {
-                            clearTimeout(debounceTimeout);
+                        if (tempKeyMax !== highPollRateEmotion) {
+                            highPollRateEmotion = tempKeyMax;
+                            if (debounceTimeout !== null) {
+                                clearTimeout(debounceTimeout);
+                            }
+                            debounceTimeout = setTimeout(() => {
+                                expressionRef.current = highPollRateEmotion;
+                                debounceTimeout = null;
+                            }, 1000);
                         }
-                        debounceTimeout = setTimeout(() => {
-                            expressionRef.current = highPollRateEmotion;
-                            debounceTimeout = null;
-                        }, 1000);
-                    }
 
-                    const resizedDetections = faceapi.resizeResults(
-                        detections,
-                        displaySize
-                    );
-                    context?.clearRect(
-                        0,
-                        0,
-                        canvasRef.current!.width,
-                        canvasRef.current!.height
-                    );
-                    faceapi.draw.drawDetections(
-                        canvasRef.current!,
-                        resizedDetections
-                    );
-                    faceapi.draw.drawFaceExpressions(
-                        canvasRef.current!,
-                        resizedDetections
-                    );
+                        const resizedDetections = faceapi.resizeResults(
+                            detections,
+                            displaySize
+                        );
+                        context?.clearRect(
+                            0,
+                            0,
+                            canvasRef.current!.width,
+                            canvasRef.current!.height
+                        );
+                        faceapi.draw.drawDetections(
+                            canvasRef.current!,
+                            resizedDetections
+                        );
+                        faceapi.draw.drawFaceExpressions(
+                            canvasRef.current!,
+                            resizedDetections
+                        );
+                    }
                 }, 200);
             });
         }

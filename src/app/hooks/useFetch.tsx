@@ -18,7 +18,7 @@ export default function useFetch(userInput: string) {
     const [isLoading, setIsLoading] = useState<Boolean>(false);
 
     useEffect(() => {
-        getData();
+        if (userInput !== "") getData();
     }, [userInput]);
 
     async function getData() {

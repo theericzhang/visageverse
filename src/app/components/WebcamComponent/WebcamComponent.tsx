@@ -49,17 +49,17 @@ const WebcamComponent = ({ setExpression }: IWebcamComponent) => {
             videoRef.current.srcObject = stream;
             videoRef.current.addEventListener("play", () => {
                 const displaySize = {
-                    width: videoRef.current.videoWidth,
-                    height: videoRef.current.videoHeight,
+                    width: videoRef.current!.videoWidth,
+                    height: videoRef.current!.videoHeight,
                 };
-                canvasRef.current.width = displaySize.width;
-                canvasRef.current.height = displaySize.height;
+                canvasRef.current!.width = displaySize.width;
+                canvasRef.current!.height = displaySize.height;
 
                 const context = canvasRef.current?.getContext("2d");
                 setInterval(async () => {
                     const detections = await faceapi
                         .detectAllFaces(
-                            videoRef.current,
+                            videoRef.current!,
                             new faceapi.TinyFaceDetectorOptions()
                         )
                         .withFaceLandmarks()

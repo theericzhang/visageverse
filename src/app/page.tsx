@@ -10,6 +10,7 @@ const HomeWrapper = styled.section``;
 
 export default function Home() {
     const [expression, setExpression] = useState<string | null>("");
+    setInterval(() => console.log(expression), 1000);
     const { data, error, isLoading } = useFetch("Happy");
     console.log(data?.result.content);
     let quote = data?.result.content;

@@ -39,16 +39,20 @@ const WebcamComponent = ({ setExpression }: IWebcamComponent) => {
         await faceapi.nets.faceExpressionNet.loadFromUri("/models");
     };
 
-    let timerID: string | number | NodeJS.Timeout | undefined;
+    let debounceTimeout: NodeJS.Timeout | null = null;
 
-    // const debounceExpressionUpdate = (expression: string) => {
-    //     clearInterval(timerID);
-    //     setInterval(() => {
-    //         highPollRateEmotion = expression;
-    //     }, 1000);
-    // };
+    let expressionPollingID: NodeJS.Timeout | number;
+
+    // interval cleanup
+    useEffect(() => {
+        return () => {
+            clearInterval(expressionPollingID);
+        };
+    }, []);
 
     const handleSuccess = (stream: MediaStream) => {
+        let tempKeyMax = "";
+
         if (videoRef.current && canvasRef.current) {
             videoRef.current.srcObject = stream;
             videoRef.current.addEventListener("play", () => {
@@ -60,7 +64,7 @@ const WebcamComponent = ({ setExpression }: IWebcamComponent) => {
                 canvasRef.current!.height = displaySize.height;
 
                 const context = canvasRef.current?.getContext("2d");
-                setInterval(async () => {
+                expressionPollingID = setInterval(async () => {
                     const detections = await faceapi
                         .detectAllFaces(
                             videoRef.current!,
@@ -71,7 +75,6 @@ const WebcamComponent = ({ setExpression }: IWebcamComponent) => {
 
                     // figure out how to grab highest value expression and debounce the value from updating.
                     let maxValue = 0;
-                    let tempKeyMax = "";
                     for (let key in detections[0].expressions) {
                         // @ts-ignore: Unreachable code error
                         if (detections[0].expressions[key] > maxValue) {
@@ -80,8 +83,17 @@ const WebcamComponent = ({ setExpression }: IWebcamComponent) => {
                             tempKeyMax = key;
                         }
                     }
-                    // grab top expression (tempKeyMax);
-                    // debounceExpressionUpdate(tempKeyMax);
+
+                    if (tempKeyMax !== highPollRateEmotion) {
+                        highPollRateEmotion = tempKeyMax;
+                        if (debounceTimeout !== null) {
+                            clearTimeout(debounceTimeout);
+                        }
+                        debounceTimeout = setTimeout(() => {
+                            setExpression(highPollRateEmotion);
+                            debounceTimeout = null;
+                        }, 1000);
+                    }
 
                     const resizedDetections = faceapi.resizeResults(
                         detections,

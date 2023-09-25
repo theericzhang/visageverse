@@ -35,7 +35,16 @@ const WebcamComponent = ({ setExpression }: IWebcamComponent) => {
         await faceapi.nets.faceExpressionNet.loadFromUri("/models");
     };
 
-    const handleSuccess = (stream) => {
+    let timerID: string | number | NodeJS.Timeout | undefined;
+
+    // const debounceExpressionUpdate = (expression: string) => {
+    //     clearInterval(timerID);
+    //     setInterval(() => {
+    //         highPollRateEmotion = expression;
+    //     }, 1000);
+    // };
+
+    const handleSuccess = (stream: MediaStream) => {
         if (videoRef.current && canvasRef.current) {
             videoRef.current.srcObject = stream;
             videoRef.current.addEventListener("play", () => {
@@ -65,12 +74,8 @@ const WebcamComponent = ({ setExpression }: IWebcamComponent) => {
                             tempKeyMax = key;
                         }
                     }
-                    console.log(tempKeyMax);
-
-                    let arrayOfExpressions = Object.values(
-                        detections[0].expressions
-                    );
-                    console.log("arrayOfExpressions", arrayOfExpressions);
+                    // grab top expression (tempKeyMax);
+                    debounceExpressionUpdate(tempKeyMax);
 
                     const resizedDetections = faceapi.resizeResults(
                         detections,
@@ -90,7 +95,6 @@ const WebcamComponent = ({ setExpression }: IWebcamComponent) => {
                         canvasRef.current,
                         resizedDetections
                     );
-                    console.log(detections);
                 }, 200);
             });
         }

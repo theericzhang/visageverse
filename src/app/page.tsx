@@ -6,7 +6,11 @@ import QuoteLabel from "./components/QuoteLabel/QuoteLabel";
 import useFetch from "./hooks/useFetch";
 import { useState, useRef, useEffect } from "react";
 
-const HomeWrapper = styled.section``;
+const HomeWrapper = styled.section`
+    display: flex;
+    flex-direction: column;
+    position: relative;
+`;
 
 export default function Home() {
     const [expression, setExpression] = useState("");

@@ -7,6 +7,12 @@ interface IQuoteLabel {
 
 const QuoteWrapper = styled.span`
     white-space: pre-wrap;
+    position: absolute;
+    z-index: 3;
+    color: blue;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
 `;
 
 export default function QuoteLabel({ quote, isLoading }: IQuoteLabel) {

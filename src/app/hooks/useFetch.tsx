@@ -15,7 +15,7 @@ interface IData {
 export default function useFetch(userInput: string) {
     const [data, setData] = useState<IData | null>();
     const [error, setError] = useState<IError | null>();
-    const [isLoading, setIsLoading] = useState<Boolean>(false);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     useEffect(() => {
         if (userInput !== "") getData();

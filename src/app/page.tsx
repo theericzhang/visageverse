@@ -18,7 +18,7 @@ export default function Home() {
     let quote = data?.result.content;
     return (
         <HomeWrapper>
-            <QuoteLabel quote={quote} />
+            <QuoteLabel quote={quote} isLoading={isLoading} />
             <WebcamComponent setExpression={setExpression} />
         </HomeWrapper>
     );

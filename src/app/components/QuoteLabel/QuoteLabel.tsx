@@ -6,10 +6,14 @@ interface IQuoteLabel {
 }
 
 const QuoteWrapper = styled.span`
-    white-space: pre-wrap;
+    font-size: 16px;
+    white-space: pre;
+    text-align: left;
+    width: auto;
     position: absolute;
     z-index: 3;
-    color: blue;
+    color: white;
+    background-color: black;
     bottom: 0;
     left: 50%;
     transform: translateX(-50%);

@@ -13,6 +13,7 @@ const QuoteWrapper = styled.span`
     position: absolute;
     z-index: 3;
     color: white;
+    font-weight: 600;
     background-color: black;
     bottom: 0;
     left: 50%;
@@ -20,6 +21,8 @@ const QuoteWrapper = styled.span`
 
     @media (max-width: 600px) {
         font-size: 20px;
+        max-width: 100vw;
+        white-space: normal;
     }
 `;
 

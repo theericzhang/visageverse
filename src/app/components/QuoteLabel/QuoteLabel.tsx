@@ -23,7 +23,7 @@ const QuoteWrapper = styled.span`
         font-size: 20px;
         max-width: 100vw;
         white-space: normal;
-        top: 0;
+        top: 40px;
         bottom: unset;
     }
 `;

@@ -24,6 +24,7 @@ const QuoteWrapper = styled.span`
         max-width: 100vw;
         white-space: normal;
         top: 0;
+        bottom: unset;
     }
 `;
 

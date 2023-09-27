@@ -13,6 +13,11 @@ const WebcamComponentWrapper = styled.div`
 const WebcamVideoComponent = styled.video`
     width: 50vw;
     height: auto;
+
+    @media (max-width: 600px) {
+        width: auto;
+        height: 100vh;
+    }
 `;
 
 const CanvasComponent = styled.canvas`
@@ -21,6 +26,11 @@ const CanvasComponent = styled.canvas`
     z-index: 2;
     width: 50vw;
     height: auto;
+
+    @media (max-width: 600px) {
+        width: auto;
+        height: 100vh;
+    }
 `;
 
 interface IWebcamComponent {

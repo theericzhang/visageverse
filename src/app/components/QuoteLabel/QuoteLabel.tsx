@@ -17,6 +17,10 @@ const QuoteWrapper = styled.span`
     bottom: 0;
     left: 50%;
     transform: translateX(-50%);
+
+    @media (max-width: 600px) {
+        font-size: 20px;
+    }
 `;
 
 export default function QuoteLabel({ quote, isLoading }: IQuoteLabel) {

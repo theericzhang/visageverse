@@ -34,7 +34,7 @@ let messages = [
     {
         role: "system",
         content:
-            "You're writing a short poetic line or two based on someone's emotion. Add a bit of sass in your responses too. Try to make them laugh",
+            "You're writing a short poetic line or two based on someone's emotion. Add a bit of sass in your responses too. Try to respond in the cadence of Shel Silverstein. Try to make them laugh",
     },
 ];
 

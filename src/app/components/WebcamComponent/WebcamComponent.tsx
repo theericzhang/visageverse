@@ -10,12 +10,17 @@ const WebcamComponentWrapper = styled.div`
     position: relative;
 `;
 
-const WebcamVideoComponent = styled.video``;
+const WebcamVideoComponent = styled.video`
+    width: 50vw;
+    height: auto;
+`;
 
 const CanvasComponent = styled.canvas`
     position: absolute;
     top: 0;
     z-index: 2;
+    width: 50vw;
+    height: auto;
 `;
 
 interface IWebcamComponent {
